@@ -1,6 +1,7 @@
 import {Vector2Interface} from "../Framework/Units/Units";
 import Container from "./Container";
 import Helper from "./Helpers";
+import _ from "lodash";
 
 /**
  * Represents tha main SVG canvas element
@@ -18,6 +19,8 @@ export default class Canvas {
      */
     protected mainCanvas: SVGElement | null;
 
+    protected debouncedCanvasSize: CallableFunction;
+
     /**
      * @param app
      * @param windowSize
@@ -26,6 +29,11 @@ export default class Canvas {
     {
         this.app = app;
         this.mainCanvas = null;
+
+        _.bindAll(this, 'onWindowResize', 'setCanvasSize');
+        this.debouncedCanvasSize = _.debounce(this.setCanvasSize, 500);
+
+        window.addEventListener('resize', this.onWindowResize);
 
         this.app.registerSingleton('canvas', this);
     }
@@ -47,7 +55,7 @@ export default class Canvas {
 
     onWindowResize(): void
     {
-        
+        this.debouncedCanvasSize();
     }
 
     /**
@@ -56,6 +64,7 @@ export default class Canvas {
      */
     protected setCanvasSize(): Canvas
     {
+        console.debug('resizing', window.innerHeight, window.innerWidth);
         let windowSize = Helper.getWindowSize();
         this.setCanvasAttribute(
             'viewBox',

@@ -8,10 +8,7 @@ export default class Bootstrap {
 
         console.debug(window.innerWidth, window.innerHeight);
 
-        let canvas = new Canvas(
-            container,
-            new Vector2(window.innerWidth, window.innerHeight)
-        );
+        let canvas = new Canvas(container);
 
         canvas.init();
     }
